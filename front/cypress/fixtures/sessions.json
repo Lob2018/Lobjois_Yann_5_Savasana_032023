@@ -1,0 +1,22 @@
+[
+  {
+    "id": 2,
+    "name": "Name",
+    "date": "2001-01-01T00:00:00.000+00:00",
+    "teacher_id": 1,
+    "description": "Description",
+    "users": [],
+    "createdAt": "2023-03-02T14:38:45",
+    "updatedAt": "2023-03-02T15:04:33"
+  },
+  {
+    "id": 3,
+    "name": "Name2",
+    "date": "2002-02-02T00:00:00.000+00:00",
+    "teacher_id": 2,
+    "description": "Description2",
+    "users": [],
+    "createdAt": "2023-03-02T15:06:40",
+    "updatedAt": "2023-03-02T15:06:40"
+  }
+]

@@ -1,27 +1,17 @@
+import { login } from '../support/utils/common';
+
 describe('Login spec', () => {
   it('Login successfull', () => {
-    cy.visit('/login')
-
-    cy.intercept('POST', '/api/auth/login', {
-      body: {
-        id: 1,
-        username: 'userName',
-        firstName: 'firstName',
-        lastName: 'lastName',
-        admin: true
-      },
-    })
-
     cy.intercept(
       {
         method: 'GET',
         url: '/api/session',
       },
-      []).as('session')
+      []
+    ).as('session');
 
-    cy.get('input[formControlName=email]').type("yoga@studio.com")
-    cy.get('input[formControlName=password]').type(`${"test!1234"}{enter}{enter}`)
+    login('adminLogin', 'yoga@studio.com', 'test!1234');
 
-    cy.url().should('include', '/sessions')
-  })
+    cy.wait('@session').url().should('include', '/sessions');
+  });
 });
