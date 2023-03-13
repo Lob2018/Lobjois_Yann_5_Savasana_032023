@@ -82,7 +82,7 @@ describe('Sessions spec', () => {
     });
 
     cy.fixture('sessionRead').then((json) => {
-      cy.url().should('include', '/sessions');
+      cy.wait('@sessionRead').url().should('include', '/sessions');
       cy.get('mat-card-title').last().should('contain', json[0].name);
       cy.log('**The session created is shown**');
     });
@@ -91,17 +91,18 @@ describe('Sessions spec', () => {
   it('Session informations are shown for user', () => {
     login('userLogin', 'yoga@studio.com', 'test!1234');
 
-    cy.fixture('sessions').then((json) => {
-      cy.wait('@session')
-        .get('.mat-card-title')
-        .last()
-        .should('contain', json[1].name);
+    cy.wait('@session')
+      .fixture('sessions')
+      .then((json) => {
+        cy.get('.mat-card-title').last().should('contain', json[1].name);
 
-      cy.get('.mat-card-subtitle')
-        .last()
-        .should('contain', sessionDisplayDate(new Date(json[1].date)));
-      cy.get('.mat-card-content').last().should('contain', json[1].description);
-    });
+        cy.get('.mat-card-subtitle')
+          .last()
+          .should('contain', sessionDisplayDate(new Date(json[1].date)));
+        cy.get('.mat-card-content')
+          .last()
+          .should('contain', json[1].description);
+      });
   });
 
   it('Update a session as admin', () => {
@@ -185,6 +186,14 @@ describe('Sessions spec', () => {
       },
       {}
     ).as('sessionDeleted');
+
+    cy.intercept(
+      {
+        method: 'GET',
+        url: '/api/teacher/2',
+      },
+      { fixture: 'teacher2' }
+    ).as('teacher2');
 
     login('adminLogin', 'yoga@studio.com', 'test!1234');
 
