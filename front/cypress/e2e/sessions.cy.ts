@@ -201,4 +201,122 @@ describe('Sessions spec', () => {
     cy.log('**The session is deleted**');
     cy.wait('@sessionDeleted').url().should('include', '/sessions');
   });
+
+  it('User participate to a session successfull', () => {
+    login('userLogin', 'yoga@studio.com', 'test!1234');
+
+    cy.intercept(
+      {
+        method: 'GET',
+        url: '/api/session/3',
+      },
+      { fixture: 'sessionBeforeUpdate' }
+    ).as('sessionBeforeUpdate');
+
+    cy.intercept(
+      {
+        method: 'GET',
+        url: '/api/teacher/2',
+      },
+      { fixture: 'teacher2' }
+    ).as('teacher2');
+
+    cy.intercept(
+      {
+        method: 'GET',
+        url: '/api/teacher/1',
+      },
+      { fixture: 'teacher1' }
+    ).as('teacher1');
+
+    cy.intercept(
+      {
+        method: 'POST',
+        url: '/api/session/3/participate/1',
+      },
+      []
+    ).as('sessionParticipate');
+
+    cy.wait('@session')
+      .get('.mat-card')
+      .last()
+      .contains('button', 'Detail')
+      .click();
+
+    cy.wait('@sessionBeforeUpdate');
+
+    cy.intercept(
+      {
+        method: 'GET',
+        url: '/api/session/3',
+      },
+      { fixture: 'sessionAfterUpdate' }
+    ).as('sessionAfterUpdate');
+
+    cy.get('.mat-card').last().contains('button', 'Participate').click();
+
+    cy.wait('@teacher1')
+      .get('.mat-card')
+      .last()
+      .contains('button', 'Do not participate');
+  });
+
+  it('User do not participate to a session successfull', () => {
+    login('userLogin', 'yoga@studio.com', 'test!1234');
+
+    cy.intercept(
+      {
+        method: 'GET',
+        url: '/api/session/3',
+      },
+      { fixture: 'sessionAfterUpdate' }
+    ).as('sessionAfterUpdate');
+
+    cy.intercept(
+      {
+        method: 'GET',
+        url: '/api/teacher/2',
+      },
+      { fixture: 'teacher2' }
+    ).as('teacher2');
+
+    cy.intercept(
+      {
+        method: 'GET',
+        url: '/api/teacher/1',
+      },
+      { fixture: 'teacher1' }
+    ).as('teacher1');
+
+    cy.intercept(
+      {
+        method: 'DELETE',
+        url: '/api/session/3/participate/1',
+      },
+      []
+    ).as('sessionDonNotParticipate');
+
+    cy.wait('@session')
+      .get('.mat-card')
+      .last()
+      .contains('button', 'Detail')
+      .click();
+
+    cy.wait('@sessionAfterUpdate');
+
+    cy.intercept(
+      {
+        method: 'GET',
+        url: '/api/session/3',
+      },
+      { fixture: 'sessionBeforeUpdate' }
+    ).as('sessionBeforeUpdate');
+
+    cy.get('.mat-card').last().contains('button', 'Do not participate').click();
+
+    cy.wait('@teacher2')
+      .get('.mat-card')
+      .last()
+      .contains('button', 'Participate');
+  });
 });

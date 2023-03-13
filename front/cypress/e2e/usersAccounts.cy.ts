@@ -54,4 +54,19 @@ describe('User account spec', () => {
       cy.log('**The user email is shown**');
     });
   });
+
+  it('Administrator back from account information successfull', () => {
+    cy.intercept(
+      {
+        method: 'GET',
+        url: '/api/user/1',
+      },
+      { fixture: 'adminAccount' }
+    ).as('information');
+    login('adminLogin', 'yoga@studio.com', 'test!1234');
+    cy.wait('@session').get('span[routerlink="me"]').click();
+    cy.contains('button', 'arrow_back').click();
+    cy.wait('@session').url().should('include', '/sessions');
+    cy.log('**Back to the sessions list successfull**');
+  });
 });
