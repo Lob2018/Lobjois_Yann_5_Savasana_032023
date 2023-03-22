@@ -333,7 +333,7 @@ describe('DetailComponent - Given I am on the detail page as an admin', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('When I click on the back icon', () => {
+  describe('When I click on the delete icon', () => {
     it('Then delete method should be called', fakeAsync(async () => {
       const navigateSpy = jest.spyOn(router, 'navigate');
       const deleteSpy = jest.spyOn(serviceAPISession, 'delete');
