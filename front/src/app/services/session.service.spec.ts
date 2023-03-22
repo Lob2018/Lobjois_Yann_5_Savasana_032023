@@ -3,15 +3,15 @@ import { expect } from '@jest/globals';
 
 import { SessionService } from './session.service';
 
-describe('SessionService', () => {
-  let service: SessionService;
+describe('SessionService - Given the session service is used', () => {
+  let sessionSevice: SessionService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(SessionService);
+    sessionSevice = TestBed.inject(SessionService);
   });
 
-  it('should be created', () => {
-    expect(service).toBeTruthy();
+  it('Then sessionSevice should be created', () => {
+    expect(sessionSevice).toBeTruthy();
   });
 });

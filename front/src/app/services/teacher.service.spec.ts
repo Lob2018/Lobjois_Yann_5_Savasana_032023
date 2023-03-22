@@ -1,22 +1,37 @@
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { expect } from '@jest/globals';
 
 import { TeacherService } from './teacher.service';
 
-describe('TeacherService', () => {
-  let service: TeacherService;
+describe('TeacherService - Given the teacher service is used', () => {
+  const httpClientMock = {
+    get: jest.fn(),
+  };
+  let teacherService: TeacherService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports:[
-        HttpClientModule
-      ]
+      imports: [HttpClientModule],
+      providers: [
+        {
+          provide: HttpClient,
+          useValue: httpClientMock,
+        },
+      ],
     });
-    service = TestBed.inject(TeacherService);
+    teacherService = TestBed.inject(TeacherService);
+    jest.clearAllMocks();
   });
 
-  it('should be created', () => {
-    expect(service).toBeTruthy();
+  it('Then teacherService should be created', () => {
+    expect(teacherService).toBeTruthy();
+  });
+
+  describe('When detail method is called', () => {
+    it('Should make a GET request to the detail endpoint', () => {
+      teacherService.detail('1');
+      expect(httpClientMock.get).toHaveBeenCalledWith('api/teacher/1');
+    });
   });
 });

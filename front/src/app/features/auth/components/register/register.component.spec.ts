@@ -5,7 +5,7 @@ import {
   TestBed,
   tick,
 } from '@angular/core/testing';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import {  ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -17,7 +17,6 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { expect } from '@jest/globals';
 import { of, throwError } from 'rxjs';
 import { SessionsModule } from 'src/app/features/sessions/sessions.module';
-import { SessionInformation } from 'src/app/interfaces/sessionInformation.interface';
 import { SessionService } from 'src/app/services/session.service';
 import { RegisterRequest } from '../../interfaces/registerRequest.interface';
 import { AuthService } from '../../services/auth.service';
