@@ -22,7 +22,7 @@ import { UserService } from 'src/app/services/user.service';
 
 import { MeComponent } from './me.component';
 
-describe('MeComponent', () => {
+describe('MeComponent - Given I am on the me page', () => {
   let component: MeComponent;
   let fixture: ComponentFixture<MeComponent>;
 
@@ -56,7 +56,6 @@ describe('MeComponent', () => {
         MatInputModule,
       ],
       providers: [
-        MatSnackBarModule,
         {
           provide: MatSnackBar,
           useValue: {

@@ -110,24 +110,28 @@ describe('LoginComponent - Given I am on the login page', () => {
     it('Then the form is invalid', fakeAsync(async () => {
       fixture.detectChanges();
       const email = component.form.controls['email'];
-      email.setValue('yogastudio.com');
-      const password = component.form.controls['password'];
-      password.setValue(loginRequest.password);
-      tick(1000);
+      email.setValue(loginRequest.email);
+      tick(500);
       fixture.detectChanges();
-      expect(component.form.valid).toBeFalsy();
+      expect(email.valid).toBeTruthy();
+      email.setValue('yogastudio.com');
+      tick(500);
+      fixture.detectChanges();
+      expect(email.valid).toBeFalsy();
     }));
   });
   describe('When I fill the login form with no password', () => {
     it('Then the form is invalid', fakeAsync(async () => {
       fixture.detectChanges();
-      const email = component.form.controls['email'];
-      email.setValue(loginRequest.email);
       const password = component.form.controls['password'];
-      password.setValue('');
-      tick(1000);
+      password.setValue(loginRequest.password);
+      tick(500);
       fixture.detectChanges();
-      expect(component.form.valid).toBeFalsy();
+      expect(password.valid).toBeTruthy();
+      password.setValue('');
+      tick(500);
+      fixture.detectChanges();
+      expect(password.valid).toBeFalsy();
     }));
   });
   describe('When I send the login form with invalid credentials', () => {

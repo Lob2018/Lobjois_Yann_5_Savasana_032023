@@ -54,7 +54,6 @@ describe('AppComponent - Given I am on the root page', () => {
     fixture.detectChanges();
     toolbar = fixture.debugElement.queryAll(By.css('span'));
   });
-
   it('Then AppComponent should be created', () => {
     expect(component).toBeTruthy();
   });
@@ -113,6 +112,21 @@ describe('AppComponent - Given I am on the root page', () => {
       fixture.detectChanges();
       expect(logoutSpy).toHaveBeenCalled();
       expect(router.url).toBe('/');
+    }));
+  });
+
+  describe('When I am logged', () => {
+    it('Then the application name, Sessions Account and Logout should be shown', fakeAsync(async () => {
+      jest.spyOn(component, '$isLogged').mockReturnValue(of(true));
+      tick(500);
+      fixture.detectChanges();
+      let toolbar = fixture.debugElement.queryAll(By.css('span'));
+
+      expect(component.$isLogged()).toBeTruthy();
+      expect(toolbar[0].nativeElement.textContent).toContain('Yoga app');
+      expect(toolbar[1].nativeElement.textContent).toContain('Sessions');
+      expect(toolbar[2].nativeElement.textContent).toContain('Account');
+      expect(toolbar[3].nativeElement.textContent).toContain('Logout');
     }));
   });
 });
