@@ -34,4 +34,10 @@ describe('TeacherService - Given the teacher service is used', () => {
       expect(httpClientMock.get).toHaveBeenCalledWith('api/teacher/1');
     });
   });
+  describe('When all method is called', () => {
+    it('Should make a GET request to the all endpoint', () => {
+      teacherService.all();
+      expect(httpClientMock.get).toHaveBeenCalledWith('api/teacher');
+    });
+  });
 });

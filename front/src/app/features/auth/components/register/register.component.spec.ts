@@ -16,7 +16,6 @@ import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { expect } from '@jest/globals';
 import { of, throwError } from 'rxjs';
-import { SessionsModule } from 'src/app/features/sessions/sessions.module';
 import { SessionService } from 'src/app/services/session.service';
 import { RegisterRequest } from '../../interfaces/registerRequest.interface';
 import { AuthService } from '../../services/auth.service';
@@ -40,11 +39,11 @@ describe('RegisterComponent - Given I am on the register page', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [RegisterComponent],
-      providers: [SessionService, AuthService],
+      providers: [SessionService, AuthService,
+        { provide: Router, useValue: { navigate: jest.fn() } }
+      ],
       imports: [
-        RouterTestingModule.withRoutes([
-          { path: 'login', component: SessionsModule },
-        ]),
+        RouterTestingModule,
         BrowserAnimationsModule,
         HttpClientModule,
         ReactiveFormsModule,
@@ -159,7 +158,6 @@ describe('RegisterComponent - Given I am on the register page', () => {
   describe('When I send the register form with valid credentials', () => {
     it('Then submit method is called and we are redirected to /login', async () => {
       fixture.detectChanges();
-      const navigateSpy = jest.spyOn(router, 'navigate');
       jest.spyOn(component, 'submit');
       jest.spyOn(serviceSession, 'logIn');
 
@@ -176,7 +174,7 @@ describe('RegisterComponent - Given I am on the register page', () => {
 
       // Assert
       expect(component.submit).toHaveBeenCalled();
-      expect(navigateSpy).toHaveBeenCalledWith(['/login']);
+      expect(router.navigate).toHaveBeenCalledWith(['/login']);
     });
   });
 });
