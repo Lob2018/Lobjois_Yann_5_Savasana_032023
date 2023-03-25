@@ -217,14 +217,6 @@ describe('Sessions spec', () => {
     cy.intercept(
       {
         method: 'GET',
-        url: '/api/session/3',
-      },
-      { fixture: 'sessionBeforeUpdate' }
-    ).as('sessionBeforeUpdate');
-
-    cy.intercept(
-      {
-        method: 'GET',
         url: '/api/teacher/2',
       },
       { fixture: 'teacher2' }
@@ -245,6 +237,14 @@ describe('Sessions spec', () => {
       },
       []
     ).as('sessionParticipate');
+
+    cy.intercept(
+      {
+        method: 'GET',
+        url: '/api/session/3',
+      },
+      { fixture: 'sessionBeforeUpdate' }
+    ).as('sessionBeforeUpdate');
 
     cy.wait('@session')
       .get('.mat-card')
