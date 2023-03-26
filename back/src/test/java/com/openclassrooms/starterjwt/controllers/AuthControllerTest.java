@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -122,19 +123,15 @@ public class AuthControllerTest {
 		// GIVEN 		
 		// mock the UserRepository.existsByEmail method to return true
 		when(userRepository.existsByEmail(Mockito.anyString())).thenReturn(true);
-
 		// WHEN
 		// call the registerUser method with the mock SignupRequest object
 		ResponseEntity<?> responseEntity = authController.registerUser(signupRequest);
-
 		// THEN
 		// assert that the UserRepository.existsByEmail method was called once with the incorrect email argument
-		verify(userRepository, Mockito.times(1)).existsByEmail(email);
-		
+		verify(userRepository, Mockito.times(1)).existsByEmail(email);		
 		// assert that the UserRepository.save method was not called with the incorrect User object argument
 		ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
-		verify(userRepository, Mockito.times(0)).save(userCaptor.capture());
-		
+		verify(userRepository, Mockito.times(0)).save(userCaptor.capture());		
 		// assert that the response entity has status code 400 and the error message response body		
 		assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
 		assertEquals("Error: Email is already taken!", ((MessageResponse) responseEntity.getBody()).getMessage());		
@@ -152,7 +149,8 @@ public class AuthControllerTest {
 		// mock the jwtUtils.generateJwtToken method to return token
 		when(jwtUtils.generateJwtToken(authentication)).thenReturn(token);
 		// mock the UserRepository.findByEmail method to return user
-		when(userRepository.findByEmail(userDetailsImpl.getUsername())).thenReturn(Optional.of(user));
+		Optional<User> opt = Optional.of(user);
+		when(userRepository.findByEmail(userDetailsImpl.getUsername())).thenReturn(opt);
 		// WHEN
 		ResponseEntity<?> responseEntity = authController.authenticateUser(loginRequest);
 		JwtResponse jwtResponse = (JwtResponse) responseEntity.getBody();
@@ -165,6 +163,26 @@ public class AuthControllerTest {
 		assertFalse(jwtResponse.getAdmin());
 		// assert that the response entity has status code 200 and the correct message
 		// response body
+		assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+	}
+
+	@Test
+	void testAuthenticateUserNotAdmin_success() {
+		// GIVEN
+		// mock the Authentication object
+		Authentication authentication = mock(Authentication.class);
+		// mock the authenticationManager.authenticate method to return authentication
+		when(authenticationManager.authenticate(any())).thenReturn(authentication);
+		// mock the authentication.getPrincipal method to return userDetailsImpl
+		when(authentication.getPrincipal()).thenReturn(userDetailsImpl);
+		// mock the jwtUtils.generateJwtToken method to return token
+		when(jwtUtils.generateJwtToken(authentication)).thenReturn(token);		
+		// mock the UserRepository.findByEmail method to return null
+		Optional<User> opt = Optional.ofNullable(null);		
+		when(userRepository.findByEmail(email)).thenReturn(opt);
+		// WHEN
+		ResponseEntity<?> responseEntity = authController.authenticateUser(loginRequest);
+		// THEN
 		assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 	}
 

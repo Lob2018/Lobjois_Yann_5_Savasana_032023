@@ -2,8 +2,10 @@ package com.openclassrooms.starterjwt.controllers;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
@@ -18,6 +20,7 @@ import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -130,6 +133,34 @@ public class SessionControllerTest {
 	}
 
 	@Test
+	public void testFindByIdNotFound_fail() {
+		// GIVEN
+		when(sessionService.getById(1L)).thenReturn(null);
+		// WHEN
+		// Call the controller method
+		ResponseEntity<?> responseEntity = sessionController.findById("1");
+		// THEN
+		// Assert the response status and body		
+		assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
+		assertNull(responseEntity.getBody());
+	}
+
+	@Test
+	public void testFindByIdNotANumber_fail() {
+		// GIVEN
+		doThrow(NumberFormatException.class).when(sessionService).getById(anyLong());
+		ResponseEntity<?> responseEntity = null;
+		// WHEN
+		try {
+			responseEntity = sessionController.findById("invalid");
+		} catch (NumberFormatException e) {
+			// THEN
+			verify(sessionService).getById(anyLong());
+			Assertions.assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+		}
+	}
+
+	@Test
 	public void testCreate_success() {
 		// GIVEN
 		when(sessionService.create(any(Session.class))).thenReturn(session);
@@ -176,6 +207,22 @@ public class SessionControllerTest {
     }
 
 	@Test
+	public void testUpdateNotANumber_fail() {
+		// GIVEN
+		ArgumentCaptor<Session> argument = ArgumentCaptor.forClass(Session.class);
+		doThrow(NumberFormatException.class).when(sessionService).update(anyLong(), argument.capture());
+		ResponseEntity<?> responseEntity = null;
+		// WHEN
+		try {
+			responseEntity = sessionController.update("invalid", sessionDto);
+		} catch (NumberFormatException e) {
+			// THEN
+			verify(sessionService).getById(anyLong());
+			Assertions.assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+		}
+	}
+
+	@Test
     void testSaveWithValidId_success() {
 		// GIVEN
         when(sessionService.getById(id)).thenReturn(session);
@@ -187,29 +234,27 @@ public class SessionControllerTest {
     }
 
 	@Test
-	void testSaveWithInvalidId_fail() {
+	void testSaveNotFound_fail() {
 		// GIVEN
-		String id = "invalid-id";
 		when(sessionService.getById(anyLong())).thenReturn(null);
 		// WHEN
-		ResponseEntity<?> response = sessionController.save(id);
+		ResponseEntity<?> response = sessionController.save("1");
 		// THEN
-		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+		assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
 	}
 
 	@Test
 	void testSaveWithNumberFormatException_fail() {
 		// GIVEN
-		String id = "invalid-id";
 		when(sessionService.getById(anyLong())).thenThrow(NumberFormatException.class);
 		// WHEN
-		ResponseEntity<?> response = sessionController.save(id);
+		ResponseEntity<?> response = sessionController.save("invalid");
 		// THEN
 		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
 	}
 
 	@Test
-	public void testParticipate_Success() {
+	public void testParticipate_success() {
 		// GIVEN
 		doNothing().when(sessionService).participate(anyLong(), anyLong());
 		// WHEN
