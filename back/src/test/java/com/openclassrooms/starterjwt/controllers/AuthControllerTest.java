@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -176,9 +175,9 @@ public class AuthControllerTest {
 		// mock the authentication.getPrincipal method to return userDetailsImpl
 		when(authentication.getPrincipal()).thenReturn(userDetailsImpl);
 		// mock the jwtUtils.generateJwtToken method to return token
-		when(jwtUtils.generateJwtToken(authentication)).thenReturn(token);		
+		when(jwtUtils.generateJwtToken(authentication)).thenReturn(token);
 		// mock the UserRepository.findByEmail method to return null
-		Optional<User> opt = Optional.ofNullable(null);		
+		Optional<User> opt = Optional.ofNullable(null);
 		when(userRepository.findByEmail(email)).thenReturn(opt);
 		// WHEN
 		ResponseEntity<?> responseEntity = authController.authenticateUser(loginRequest);
