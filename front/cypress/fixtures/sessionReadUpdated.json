@@ -1,0 +1,12 @@
+[
+  {
+    "id": 4,
+    "name": "NomUpdated",
+    "date": "2002-01-01T00:00:00.000+00:00",
+    "teacher_id": 1,
+    "description": "descriptionUpdated",
+    "users": [],
+    "createdAt": "2023-03-13T18:29:21",
+    "updatedAt": "2023-03-13T18:29:21"
+  }
+]

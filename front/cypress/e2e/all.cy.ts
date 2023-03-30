@@ -1,0 +1,7 @@
+import './404.cy'
+import './guards.cy'
+import './login.cy'
+import './logout.cy'
+import './register.cy'
+import './sessions.cy'
+import './usersAccounts.cy'

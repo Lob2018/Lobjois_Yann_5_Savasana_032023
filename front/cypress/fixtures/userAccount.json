@@ -1,0 +1,9 @@
+{
+  "id": 1,
+  "email": "test@test.fr",
+  "lastName": "Test",
+  "firstName": "Test",
+  "admin": false,
+  "createdAt": "2023-03-02T14:29:34",
+  "updatedAt": "2023-03-02T14:29:34"
+}
