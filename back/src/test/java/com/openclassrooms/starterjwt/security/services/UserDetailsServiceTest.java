@@ -37,7 +37,7 @@ public class UserDetailsServiceTest {
 	private final User user = new User(id, mail, lastName, firstName, password, false, localDateTime, localDateTime);
 
 	@Test
-	public void loadUserByUsername_success() {
+	public void testLoadUserByUsername_success() {
 		// GIVEN
 		when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
 		// WHEN
@@ -50,7 +50,7 @@ public class UserDetailsServiceTest {
 	}
 
 	@Test
-	public void loadUserByUsernameThrowsUserNotFound_fail() {
+	public void testLoadUserByUsernameThrowsUserNotFound_fail() {
 		// GIVEN
 		when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.empty());
 		try {
